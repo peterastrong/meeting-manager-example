@@ -14,6 +14,7 @@ class MeetingsController < ApplicationController
   end
 
   def new
+    @meeting = Meeting.new
     render 'new.html.erb'
   end
 
@@ -26,8 +27,10 @@ class MeetingsController < ApplicationController
       notes: params[:notes]
     )
     if @meeting.save
+      flash[:success] = "Your meeting has been created!"
       redirect_to "/meetings"
     else
+      flash[:error] = "Your meeting has not been created!"
       render 'new.html.erb'
     end
   end
