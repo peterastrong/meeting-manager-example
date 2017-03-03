@@ -37,4 +37,30 @@ class MeetingsController < ApplicationController
       render 'new.html.erb'
     end
   end
+
+  def edit 
+    @meeting = Meeting.find_by(id: params[:id])
+    render "edit.html.erb"
+  end
+
+  def update
+    @meeting = Meeting.find_by(id: params[:id])
+    @meeting.assign_attributes( 
+      name: params[:name],
+      address: params[:address],
+      start_time: params[:start_time],
+      end_time: params[:start_time],
+      notes: params[:notes])
+    if @meeting.save
+      @meeting.tags.destroy_all
+      params[:tag_ids].each do |tag_id|
+        MeetingTag.create(meeting_id: @meeting.id, tag_id: tag_id)
+      end
+      flash[:success] = "Your meeting has been updated!"
+      redirect_to "/meetings"
+    else
+      flash[:error] = "Your meeting has not been updated!"
+      render "edit.html.erb"
+    end
+  end
 end
