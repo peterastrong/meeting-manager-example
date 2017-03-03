@@ -27,6 +27,9 @@ class MeetingsController < ApplicationController
       notes: params[:notes]
     )
     if @meeting.save
+      params[:tag_ids].each do |tag_id|
+        MeetingTag.create(meeting_id: @meeting.id, tag_id: tag_id)
+      end
       flash[:success] = "Your meeting has been created!"
       redirect_to "/meetings"
     else
